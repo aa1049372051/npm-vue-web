@@ -1,0 +1,16 @@
+import { createApp } from 'vue'
+import './style.css'
+import App from './App.vue'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+// import JpVue from './../packages/index'
+// import JpVue from '../dist/vue-web.js'
+
+
+const app = createApp(App)
+app.use(ElementPlus);
+// app.use(JpVue);
+
+
+// 挂载根组件
+app.mount('#app');
