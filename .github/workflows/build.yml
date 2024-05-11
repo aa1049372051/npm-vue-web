@@ -1,0 +1,47 @@
+name: webstack Actions # 名字自取
+
+on:
+  push:
+    branches:
+      - main # 这里的意思是当 main 分支发生 push 的时候，运行下面的 jobs
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04 # 在什么环境运行任务
+    steps:
+      - uses: actions/checkout@v3 # 引用 actions/checkout 这个 action，与所在的 github 仓库同名
+        with:
+          submodules: true # Fetch Hugo themes (true OR recursive) 获取 submodule 主题
+          fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
+
+      - name: Build Site
+        run: |
+          pwd
+          node -v
+          yarn
+          yarn build
+
+      - name: Deploy Pages
+        uses: peaceiris/actions-gh-pages@v3 # 一个自动发布 github pages 的 action
+        with:
+          external_repository: aa1049372051/npm-vue-web # 发布到哪个 repo
+          personal_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # 发布到其他 repo 需要在对应的 repo 上粘贴生成的 personal_access_token
+          #1. 创建 Personal_Access_Token：
+          #   GitHub 个人账号 -> Settings -> Developer settings -> Personal access tokens ->  Tokens (classic) -> New personal access token (classic)
+          #   - Expiration: No expiration
+          #   - Select scopes: 全选
+          #2. 粘贴 Personal_Access_Token：
+          #   进入目标 repo -> Settings -> Security -> Secrets and variables -> Actions，选择 New repository secret -> 粘贴前面生成的 personal_access_token
+          publish_dir: ./storybook-static
+          #注意这里指的是 Pages 要发布哪个文件夹的内容，而不是指发布到目标仓库的什么位置；因为 hugo 默认生成静态网页到 public 文件夹，所以这里发布 public 文件夹里的内容。
+          publish_branch: gh-pages # 发布到哪个 branch
+          force_orphan: true
+          full_commit_message: ${{ github.event.head_commit.message }}
+
+      #👇 Adds Chromatic as a step in the workflow
+      - uses: chromaui/action@v1
+        # Options required for Chromatic's GitHub Action
+        with:
+          #👇 Chromatic projectToken,
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
