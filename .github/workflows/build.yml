@@ -1,25 +1,31 @@
-name: webstack Actions # 名字自取
+# Workflow name
+name: "Chromatic Publish"
 
-on:
-  push:
-    branches:
-      - main # 这里的意思是当 main 分支发生 push 的时候，运行下面的 jobs
+# Event for the workflow
+on: push
 
+# List of jobs
 jobs:
-  deploy:
-    runs-on: ubuntu-20.04 # 在什么环境运行任务
+  test:
+    # Operating System
+    runs-on: ubuntu-latest
+    # Job steps
     steps:
-      - uses: actions/checkout@v3 # 引用 actions/checkout 这个 action，与所在的 github 仓库同名
+      - uses: actions/checkout@v3
         with:
-          submodules: true # Fetch Hugo themes (true OR recursive) 获取 submodule 主题
-          fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
-
-      - name: Build Site
-        run: |
-          pwd
-          node -v
-          yarn
-          yarn build
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "yarn"
+      - run: yarn
+      #👇 Adds Chromatic as a step in the workflow
+      - uses: chromaui/action@v1
+        # Options required for Chromatic's GitHub Action
+        with:
+          #👇 Chromatic projectToken,
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy Pages
         uses: peaceiris/actions-gh-pages@v3 # 一个自动发布 github pages 的 action
@@ -37,11 +43,3 @@ jobs:
           publish_branch: gh-pages # 发布到哪个 branch
           force_orphan: true
           full_commit_message: ${{ github.event.head_commit.message }}
-
-      #👇 Adds Chromatic as a step in the workflow
-      - uses: chromaui/action@v1
-        # Options required for Chromatic's GitHub Action
-        with:
-          #👇 Chromatic projectToken,
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          token: ${{ secrets.GITHUB_TOKEN }}
