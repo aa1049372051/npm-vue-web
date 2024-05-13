@@ -2,9 +2,17 @@ import type { StorybookConfig } from "@storybook/vue3-vite";
 
 const config: StorybookConfig = {
   stories: [
+    "../packages/Intro.mdx",
     "../packages/**/*.stories.@(js|jsx|mjs|ts|tsx)",
     "../packages/**/*.mdx",
   ],
+  refs: {
+    // "design-system": {
+    //   title: "Storybook Design System",
+    //   url: "https://master--5ccbc373887ca40020446347.chromatic.com/",
+    //   expanded: false,
+    // },
+  },
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",

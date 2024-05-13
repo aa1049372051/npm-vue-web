@@ -5,6 +5,7 @@ import WOssUpload from "../src/main.vue";
 const meta: Meta<typeof WOssUpload> = {
   component: WOssUpload,
   tags: ["autodocs"],
+  title: "COMPONENTS/WOssUpload",
   argTypes: {},
   parameters: {
     componentSubtitle: "上传组件",

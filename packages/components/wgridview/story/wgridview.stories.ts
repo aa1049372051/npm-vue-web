@@ -6,6 +6,7 @@ const meta: Meta<typeof WGridView> = {
   component: WGridView,
   tags: ["autodocs"],
   argTypes: {},
+  title: "COMPONENTS/WGridView",
   parameters: {
     componentSubtitle: "表格组件",
     docs: {

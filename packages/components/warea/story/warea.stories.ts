@@ -5,6 +5,7 @@ import WArea from "../src/main.vue";
 const meta: Meta<typeof WArea> = {
   component: WArea,
   tags: ["autodocs"],
+  title: "COMPONENTS/WArea",
   argTypes: {},
   decorators: [
     () => ({
