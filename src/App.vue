@@ -1,8 +1,8 @@
 <script setup>
 import HelloWorld from "./components/HelloWorld.vue";
 // import { WGridView } from "@my-plugins/vue-web";
-import { WGridView, WOssUpload, WArea, utils } from "../dist/vue-web";
-console.log(utils.getBeforeTimeStartEnd);
+import { WGridView, WOssUpload, WArea, utils, plugins } from "../dist/vue-web";
+console.log(plugins, utils);
 const javaApi = () => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -50,7 +50,11 @@ let columns = [
     >
       <el-button link type="primary">上传</el-button>
     </WOssUpload> -->
-    <WGridView :javaApi="javaApi" :columns="columns"></WGridView>
+    <WGridView
+      :closePage="false"
+      :javaApi="javaApi"
+      :columns="columns"
+    ></WGridView>
   </div>
   <HelloWorld msg="Vite + Vue" />
 </template>

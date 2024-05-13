@@ -2,8 +2,10 @@
  * axios封装
  * 请求拦截、响应拦截、错误统一处理
  */
-import axios from "axios";
 import { ElMessage } from "element-plus";
+import axios from "axios";
+import { useUserStore } from "@/stores/user";
+
 let store = {};
 
 /**
@@ -20,7 +22,7 @@ const tip = msg => {
  * 改变登录状态
  */
 const toLogin = () => {
-  store.commit("changeLogin", false);
+  store.loginOut();
 };
 
 /**
@@ -72,25 +74,24 @@ var instance = axios.create({
 
 instance.interceptors.request.use(
   config => {
-    // console.log(config, "config");
-    // console.log(store.state.config.header, "header");
-    let header = { organId: 0, userId: 0 }
+    store = useUserStore(window.pinia)
     if (config.baseURL) {
       config.url = config.url;
     } else {
-      if (config.url.indexOf("/v1") !== 0) {
-        config.url = "/jiaparts-support-api/" + config.url;
-      }
+      config.url = "/jiaparts-support-api-v3/" + config.url;
     }
-
-    if (config.method == "get") {
-      config.params || (config.params = {});
-      if (config.params != undefined) {
-        Object.assign(config.params, header);
-      } else {
-        config.params = header;
-      }
-    }
+    // if (config.method == "get") {
+    //   config.params || (config.params = {});
+    //   if (config.params != undefined) {
+    //     Object.assign(config.params, store.state.config.header);
+    //   } else {
+    //     config.params = store.state.config.header;
+    //   }
+    // }
+    config.headers.userId = store.userId || 0
+    config.headers.organId = store.organId || 0
+    config.headers.channel = store.channel
+    config.headers.accessToken = store.accessToken
     return config;
   },
   error => {
@@ -105,12 +106,11 @@ instance.defaults.transformRequest = [
     // console.log(store.state.config.header, "header");
     // Do whatever you want to transform the data
     let post = {};
-    let header = { organId: 0, userId: 0 }
-    if (data != undefined) {
-      Object.assign(post, header);
-    } else {
-      post = header;
-    }
+    // if (data != undefined) {
+    //   Object.assign(post, store.state.config.header);
+    // } else {
+    //   post = store.state.config.header;
+    // }
     if (data && (data.pageno != undefined || data.pagesize != undefined)) {
       post.pageno = data.pageno;
       post.pagesize = data.pagesize;
@@ -129,14 +129,14 @@ instance.interceptors.response.use(
   // 请求成功
   response => {
     //兼容php返参
-    let res = { body: {}, header: {} };
-    res.body = response.data;
-    res.header = {
-      code: response.data.retCode,
-      msg: response.data.retMsg,
-      success: response.data.retCode == "200" ? true : false
-    }
-    response.data = res
+    // let res = { body: {}, header: {} };
+    // res.body = response.data;
+    // res.header = {
+    //   code: response.data.retCode,
+    //   msg: response.data.retMsg,
+    //   success: response.data.retCode == "200" ? true : false
+    // }
+    // response.data = res
     if (response.data && response.data.body && "300" == response.data.body.retCode && "您的登录状态已失效，请重新登录" == response.data.body.retMsg) {
       toLogin();
     }

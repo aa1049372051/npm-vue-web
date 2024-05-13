@@ -1,7 +1,7 @@
 {
   "name": "@my-plugins/vue-web",
   "private": false,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "dist/vue-web.umd.js",
   "module": "dist/vue-web.js",
   "type": "module",

@@ -9,6 +9,8 @@ import Editor from './components/editor/index'
 
 import * as utils from './utils'
 
+import * as plugins from './plugins'
+
 // 以数组的结构保存组件，便于遍历
 const components = [
     WGridView,
@@ -37,7 +39,8 @@ export {
     WArea,
     WOssUpload,
     Editor,
-    utils
+    utils,
+    plugins
 }
 export default {
     // 导出的对象必须具备一个 install 方法
