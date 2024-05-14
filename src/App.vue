@@ -9,8 +9,8 @@ import {
   plugins,
   FileList,
   Editor,
-} from "../packages";
-import "../dist/style.css";
+} from "@my-plugins/vue-web";
+import "@my-plugins/vue-web/lib/style.css";
 // import {
 //   WGridView,
 //   WOssUpload,

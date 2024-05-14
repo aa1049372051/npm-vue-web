@@ -1,12 +1,13 @@
 {
   "name": "@my-plugins/vue-web",
   "private": false,
-  "version": "1.0.5",
-  "main": "dist/vue-web.umd.js",
-  "module": "dist/vue-web.js",
+  "version": "1.0.9",
+  "main": "lib/vue-web.js",
+  "module": "lib/vue-web.umd.cjs",
   "type": "module",
+  "types": "lib/index.d.ts",
   "files": [
-    "dist/*"
+    "lib/*"
   ],
   "author": {
     "name": "zhanglk",
@@ -14,12 +15,13 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@my-plugins/vue-web": "1.0.9",
     "@vueup/vue-quill": "^1.2.0",
     "ali-oss": "^6.20.0",
     "axios": "^1.6.8",
@@ -40,10 +42,14 @@
     "@storybook/test": "^8.0.10",
     "@storybook/vue3": "^8.0.10",
     "@storybook/vue3-vite": "^8.0.10",
+    "@types/node": "^20.12.11",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "chromatic": "^11.3.2",
     "storybook": "^8.0.10",
-    "vite": "^5.2.0"
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.9.1",
+    "vue-tsc": "^2.0.6"
   }
 }

@@ -1,11 +1,3 @@
-/*
- * @Author         : zhanglk
- * @Date           : 2024-01-30 11:09:26
- * @LastEditTime   : 2024-02-04 17:37:54
- * @LastEditors    : zhanglk
- * @Description    :
- * @FilePath       : \xldd-top-front\src\stores\user.ts
- */
 import { defineStore } from 'pinia';
 import defaultConfig from '@/config';
 

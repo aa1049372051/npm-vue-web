@@ -1,16 +1,17 @@
+import { useOssStore } from "../stores/oss";
 //当前是否为开发环境
 export const isDev = () => {
   return process.env.NODE_ENV === "development";
 };
 
 //是否为中文
-export const isChinese = (str) => {
+export const isChinese = (str: string) => {
   if (escape(str).indexOf("%u") < 0) return false;
   return true;
 };
 
 //用户名裁剪
-export const handleName = (str) => {
+export const handleName = (str:string) => {
   let res = emoj2str(str);
   if (isChinese(res)) {
     res = res.length > 4 ? res.slice(0, 4) + "..." : res;
@@ -20,7 +21,7 @@ export const handleName = (str) => {
   return res;
 };
 //emoj转str
-export const emoj2str = (str) => {
+export const emoj2str = (str: string) => {
   return unescape(escape(str).replace(/\%uD.{3}/g, ""));
 };
 
@@ -49,7 +50,8 @@ export const formatTime = (
       (date.getFullYear() + "").substr(4 - RegExp.$1.length)
     );
   }
-  let o = {
+  let o:{[key: string]: number};
+  o= {
     "M+": date.getMonth() + 1,
     "d+": date.getDate(),
     "h+": date.getHours(),
@@ -58,7 +60,7 @@ export const formatTime = (
   };
   for (let k in o) {
     if (new RegExp(`(${k})`).test(fmt)) {
-      let str = o[k] + "";
+      let str:string = String(o[k]);
       fmt = fmt.replace(
         RegExp.$1,
         RegExp.$1.length === 1 ? str : formatNumber(str)
@@ -68,7 +70,7 @@ export const formatTime = (
   return fmt;
 };
 //数字前加0
-export const formatNumber = (n) => {
+export const formatNumber = (n: string | any[]) => {
   n = n.toString();
   return n[1] ? n : "0" + n;
 };
@@ -147,8 +149,8 @@ export function transDate(timestamp: number) {
  * 通过oss key 获取url
  * @param fileKey
  */
-export const getOssFileUrl = (fileKey, refresh: boolean = true) => {
-  let ossData: ApiData.OssConfig = getGlobalOssConfig();
+export const getOssFileUrl = (fileKey: string, refresh: boolean = true) => {
+  let ossData: ApiData.OssConfig = useOssStore().ossConfig;
   if (!ossData || !fileKey) {
     return "";
   }
@@ -160,7 +162,7 @@ export const getOssFileUrl = (fileKey, refresh: boolean = true) => {
  * 根据机构id获取图像
  * @param organId
  */
-export const getOrganLogo = (organId, refresh: boolean = true) => {
+export const getOrganLogo = (organId: any, refresh: boolean = true) => {
   let fileKey = `logo/organ/${organId}_logo`;
   return getOssFileUrl(fileKey, refresh);
 };
@@ -182,8 +184,8 @@ export const getOrganLogo = (organId, refresh: boolean = true) => {
  * 根据用户id获取图像
  * @param organId
  */
-export const getUserLogo = (userId) => {
-  let ossData: ApiData.OssConfig = getGlobalOssConfig();
+export const getUserLogo = (userId: any) => {
+  let ossData: ApiData.OssConfig = useOssStore().ossConfig;
   if (!ossData) {
     return "";
   }
@@ -195,8 +197,8 @@ export const getUserLogo = (userId) => {
  * 根据用户id获取微信二维码
  * @param userId
  */
-export const getWechatLogo = (userId) => {
-  let ossData: ApiData.OssConfig = getGlobalOssConfig();
+export const getWechatLogo = (userId: any) => {
+  let ossData: ApiData.OssConfig = useOssStore().ossConfig;
   if (!ossData) {
     return "";
   }
@@ -207,7 +209,7 @@ export const getWechatLogo = (userId) => {
 /**
  * 截取字符串
  */
-export function cutWord(str, len) {
+export function cutWord(str: string, len: number) {
   if (str && str.length > len) {
     return str.slice(0, len) + "...";
   } else {
@@ -218,7 +220,7 @@ export function cutWord(str, len) {
 /**
  * 获得url参数
  */
-export function getQueryVariable(variable) {
+export function getQueryVariable(variable: string) {
   var query = "";
   var vars = query.split("&");
   for (var i = 0; i < vars.length; i++) {
@@ -263,18 +265,18 @@ export const getImageFromMake = (str: string | number): string => {
  * @param {head：开头显示几位，end：结尾显示几位}
  * @return:
  */
-export function formateNumber(value, head, end) {
+export function formateNumber(value: string | undefined, head: any, end: any) {
   if (!value || value == undefined) return "";
   let reg = new RegExp(`(.{${head}}).*(.{${end}})`);
   return value.replace(reg, "$1****$2");
 }
 
-export function getSendProfile(userProfile) {
+export function getSendProfile(userProfile: { profileCustomField: never[]; }) {
   let profileCustomField = userProfile.profileCustomField || [];
   let key = "Tag_Profile_Custom_Organ";
   let data = null;
   if (profileCustomField.length > 0) {
-    profileCustomField.forEach((val) => {
+    profileCustomField.forEach((val: { key: string; value: string; }) => {
       if (val.key == key) {
         data = JSON.parse(val.value);
       }
@@ -283,7 +285,7 @@ export function getSendProfile(userProfile) {
   return data;
 }
 
-export function getCloudCustomData(lastMessage) {
+export function getCloudCustomData(lastMessage: { cloudCustomData: any; }) {
   let cloudCustomData = lastMessage.cloudCustomData;
   let organ = null;
   if (cloudCustomData) {
@@ -297,7 +299,7 @@ export function getCloudCustomData(lastMessage) {
  *
  * @param num1加数1 | num2加数2
  */
-export function numAdd(num1, num2) {
+export function numAdd(num1: number, num2: number) {
   let baseNum, baseNum1, baseNum2;
   try {
     baseNum1 = num1.toString().split(".")[1].length;
@@ -317,7 +319,7 @@ export function numAdd(num1, num2) {
  *
  * @param num1被减数 | num2减数
  */
-export function numSub(num1, num2) {
+export function numSub(num1: number, num2: number) {
   console.log(num1, num2);
   let baseNum, baseNum1, baseNum2;
   let precision; // 精度
@@ -340,7 +342,7 @@ export function numSub(num1, num2) {
  *
  * @param num1被乘数 | num2乘数
  */
-export function numMulti(num1, num2) {
+export function numMulti(num1: { toString: () => string; }, num2: { toString: () => string; }) {
   let baseNum = 0;
   try {
     baseNum += num1.toString().split(".")[1].length;
@@ -359,7 +361,7 @@ export function numMulti(num1, num2) {
  *
  * @param num1被除数 | num2除数
  */
-export function numDiv(num1, num2) {
+export function numDiv(num1: { toString: () => string; }, num2: { toString: () => string; }) {
   let baseNum1 = 0,
     baseNum2 = 0;
   let baseNum3, baseNum4;
@@ -436,21 +438,21 @@ export const formatTimeSplit = (
 
 //比较版本号
 //compareVersion('1.11.0', '1.9.9') // 1
-export function compareVersion(v1, v2) {
-  v1 = v1.split(".");
-  v2 = v2.split(".");
+export function compareVersion(v1: string, v2: string) {
+  let v11 = v1.split(".");
+  let v22 = v2.split(".");
   const len = Math.max(v1.length, v2.length);
 
-  while (v1.length < len) {
-    v1.push("0");
+  while (v11.length < len) {
+    v11.push("0");
   }
-  while (v2.length < len) {
-    v2.push("0");
+  while (v22.length < len) {
+    v22.push("0");
   }
 
   for (let i = 0; i < len; i++) {
-    const num1 = parseInt(v1[i]);
-    const num2 = parseInt(v2[i]);
+    const num1 = parseInt(v11[i]);
+    const num2 = parseInt(v22[i]);
 
     if (num1 > num2) {
       return 1;
@@ -470,13 +472,13 @@ export function compareVersion(v1, v2) {
  * @param  {boolean}  immediate   设置为ture时，调用触发于开始边界而不是结束边界
  * @return {function}             返回客户调用函数
  */
-export function debounce(func, wait, immediate) {
-  var timeout, args, context, timestamp, result;
+export function debounce(func: { (): void; apply?: any; }, wait: number | undefined, immediate: undefined) {
+  var timeout: NodeJS.Timeout | null, args: IArguments | null, context: any, timestamp: number, result: any;
 
   var later = function () {
     var last = Date.now() - timestamp;
 
-    if (last < wait && last >= 0) {
+    if (wait&&last < wait && last >= 0) {
       timeout = setTimeout(later, wait - last);
     } else {
       timeout = null;
@@ -487,8 +489,7 @@ export function debounce(func, wait, immediate) {
     }
   };
 
-  return function () {
-    context = this;
+  return  () => {
     args = arguments;
     timestamp = Date.now();
     var callNow = immediate && !timeout;

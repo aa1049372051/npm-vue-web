@@ -2,14 +2,16 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import path, { resolve } from 'path'
+import dts from "vite-plugin-dts"
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [vue(),dts({copyDtsFiles:true}), vueJsx()],
   resolve: {
     alias: [{ find: '@', replacement: path.resolve(__dirname, './packages') }]
   },
   build: {
+    outDir: 'lib',
     lib: {
       entry: resolve(__dirname, 'packages/index.js'),
       name: 'vue-web',
