@@ -116,9 +116,12 @@ const beforeUpload = (file) => {
     return false;
   }
   /* 校验文件类型 */
-  let fileType = ".png,.jpg,.jpeg".replace(/,/g, "$|\\");
-  fileType = "/\\" + fileType + "$/i";
-  let reg = eval(fileType);
+  // let fileType = ".png,.jpg,.jpeg".replace(/,/g, "$|\\");
+  // fileType = "/\\" + fileType + "$/i";
+  // let reg = eval(fileType);
+
+  let fileTypes = [".png", ".jpg", ".jpeg"];
+  let reg = new RegExp("^.*(" + fileTypes.join("|") + ")$", "i");
   if (!reg.test(file.name)) {
     Toast.error("只能上传png,jpg,jpeg类型的文件");
     return false;
@@ -137,6 +140,7 @@ const beforeUpload = (file) => {
   ossHeader.policy = store.ossConfig.policy;
   ossHeader.OSSAccessKeyId = store.ossConfig.accessKeyId;
   ossHeader.signature = store.ossConfig.signature;
+  console.log(ossHeader, "ossHeader");
   return true;
 };
 onMounted(() => {

@@ -6,7 +6,7 @@ import StatusTips from './components/statustips/index'
 import WOssUpload from './components/wossupload/index'
 import WArea from './components/warea/index'
 import Editor from './components/editor/index'
-
+import FileList from "./components/flieList/index"
 import * as utils from './utils'
 
 import * as plugins from './plugins'
@@ -17,7 +17,8 @@ const components = [
     StatusTips,
     WArea,
     WOssUpload,
-    Editor
+    Editor,
+    FileList
 ]
 
 // 定义 install 方法
@@ -40,7 +41,8 @@ export {
     WOssUpload,
     Editor,
     utils,
-    plugins
+    plugins,
+    FileList
 }
 export default {
     // 导出的对象必须具备一个 install 方法

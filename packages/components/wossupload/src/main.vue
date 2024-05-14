@@ -230,7 +230,7 @@ import * as OSS from "ali-oss";
 import { useUserStore } from "@/stores/user";
 import { useOssStore } from "@/stores/oss";
 import { ElMessageBox } from "element-plus";
-import axios from "@/utils/httpJava";
+import axios from "@/utils/httpV2";
 export default {
   name: "WOssUpload",
   components: {},
@@ -242,7 +242,6 @@ export default {
       isStart: false,
       //是否禁用
       updisabled: false,
-      // upUrl: this.$store.state.config.upOss,
       //上传
       fileList: [],
       //阿里云参数
@@ -412,10 +411,10 @@ export default {
     },
     show(arg, index) {
       if (window.wx) {
-        let url = this.$store.state.config.upOss + "/" + arg.filePath;
+        let url = this.upUrl + "/" + arg.filePath;
         let list = [];
         this.newFile.forEach((item) => {
-          list.push(this.$store.state.config.upOss + "/" + item.filePath);
+          list.push(this.upUrl + "/" + item.filePath);
         });
         if (arg.fileType != 1) {
           // this.$alert(url);
@@ -436,7 +435,7 @@ export default {
         return;
       }
       if (this.importType == "Web") {
-        let url = this.$store.state.config.upOss + "/" + arg.filePath;
+        let url = this.upUrl + "/" + arg.filePath;
         if (
           arg.filePath.indexOf(".xls") != -1 ||
           arg.filePath.indexOf(".xlsx") != -1
@@ -444,7 +443,7 @@ export default {
           location.href = url;
           return false;
         }
-        window.download(this.$store.state.config.upOss + "/" + arg.filePath);
+        window.download(this.upUrl + "/" + arg.filePath);
         return;
       }
       //锁-加载
@@ -461,27 +460,6 @@ export default {
         this.$set(this.newFile[index], "filePlaying", false);
         return true;
       });
-      if (window.cpp) {
-        window.cpp.JS_COMMUNICATION(
-          JSON.stringify({
-            type: "OpenFile",
-            param: this.newFile[index],
-          })
-        );
-      } else {
-        console.log(
-          JSON.stringify({
-            type: "OpenFile",
-            param: this.newFile[index],
-          })
-        );
-        setTimeout(() => {
-          window.jsBundle && window.jsBundle.notifyOpenFileState(200);
-        }, 500);
-        setTimeout(() => {
-          window.jsBundle && window.jsBundle.notifyOpenFileState(210);
-        }, 10000);
-      }
     },
     clean() {
       this.fileList = [];
@@ -514,29 +492,6 @@ export default {
             Math.round(new Date().getTime() / 1000) +
             "_" +
             parseInt(Math.random() * (9999 - 1000 + 1) + 1000, 10);
-          break;
-        case 6:
-          name =
-            "message/" +
-            this.ID +
-            "_" +
-            Math.round(new Date().getTime() / 1000) +
-            "_" +
-            parseInt(Math.random() * (9999 - 1000 + 1) + 1000, 10);
-          break;
-        case 7:
-          name =
-            "uploadInvoice/" +
-            this.$store.state.config.header.organId +
-            "/" +
-            this.$store.state.config.header.userId;
-          break;
-        case 8:
-          name =
-            "uploadGoods/" +
-            this.$store.state.config.header.organId +
-            "/" +
-            this.$store.state.config.header.userId;
           break;
         case 9:
           name = "logo/wechat/" + this.ID + "_logo";
@@ -856,24 +811,6 @@ export default {
     }
     if (window.isSend) return; //解决wgridview里面渲染多个发送多次请求
     window.isSend = true;
-    //获取上传时阿里云秘钥
-    // axios
-    //   .post("mml-syj/sys002")
-    //   .then(
-    //     (response) => {
-    //       // success callback
-    //       let data = response.data.body.result.oss;
-    //       let res = Crypto.util.setOss(data);
-    //       this.addupload(res);
-    //       this.setOSSClient(res);
-    //     },
-    //     () => {
-    //       // error callback
-    //     }
-    //   )
-    //   .finally(() => {
-    //     window.isSend = false;
-    //   });
     this.fileList = this.myFile.fileList || [];
   },
   watch: {
@@ -883,82 +820,11 @@ export default {
           (val.fileList && val.fileList.length) ||
           JSON.stringify(val) != JSON.stringify(old)
         ) {
-          console.log(1122222);
           this.fileList = this.myFile.fileList || [];
         }
       },
       deep: true,
       immediate: true,
-    },
-
-    funcFileLoading() {
-      switch (this.$store.state.openFileState) {
-        case 200: {
-          let isPlaying = 0;
-          let isLoading = 0;
-          //打开附件成功
-          this.newFile.filter((item) => {
-            if (item.fileLoading) {
-              isLoading++;
-            }
-            if (
-              item.fileLoading &&
-              (this.playType.indexOf(item.myFileType) >= 0 ||
-                item.fileType == 2)
-            ) {
-              this.$set(item, "fileLoading", false);
-              !window.isElectron && this.$set(item, "filePlaying", true);
-              isPlaying++;
-            } else if (item.fileLoading) {
-              this.$set(item, "fileLoading", false);
-            }
-            return true;
-          });
-          this.loadingLock = false;
-          if (isPlaying > 0) {
-            window.jsBundle && window.jsBundle.notifyOpenFileState(201);
-          } else if (isLoading > 0) {
-            window.jsBundle && window.jsBundle.notifyOpenFileState(0);
-          }
-          break;
-        }
-        case 210:
-          //打开播放结束
-          this.newFile.filter((item) => {
-            this.$set(item, "filePlaying", false);
-            return true;
-          });
-          window.jsBundle && window.jsBundle.notifyOpenFileState(0);
-          break;
-        case 400:
-          //打开附件失败
-          this.newFile.filter((item) => {
-            this.$set(item, "fileLoading", false);
-            return true;
-          });
-          this.loadingLock = false;
-          window.jsBundle && window.jsBundle.notifyOpenFileState(0);
-          this.$alert("文件加载失败", "提示", {
-            type: "warning",
-          });
-          break;
-        case 410:
-          //附件播放失败
-          this.newFile.filter((item) => {
-            this.$set(item, "filePlaying", false);
-            return true;
-          });
-          window.jsBundle && window.jsBundle.notifyOpenFileState(0);
-          this.$alert("文件播放失败", "提示", {
-            type: "warning",
-          });
-          break;
-        default:
-      }
-      return "";
-    },
-    captureIsHide(val) {
-      this.isHide = val;
     },
   },
   computed: {
@@ -1027,18 +893,8 @@ export default {
     this.fileList = [];
     this.form = {};
   },
-  deactivated: function () {
-    window.jsBundle && window.jsBundle.notifyOpenFileState(210);
-  },
-  created() {
-    let val = localStorage.getItem("captureIsHide");
-    if (val == "1") {
-      this.isHide = true;
-      if (this.$store.state.hasOwnProperty("captureIsHide")) {
-        this.$store.commit("setCaptureIsHide", true);
-      }
-    }
-  },
+  deactivated: function () {},
+  created() {},
 };
 </script>
 <style>

@@ -21,3 +21,7 @@
 1.添加httpv3
 2.添加plugins
 
+# 更改日志,1.0.5
+
+1.添加FileList组件
+
