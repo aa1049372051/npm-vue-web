@@ -24,7 +24,11 @@ import {FileList} from '@my-plugins/vue-web'
   <div class="en-clo-li fl wid90">
     <span v-show="false">{{ funcFileLoading }}</span>
     <ul class="clear">
-      <li v-for="(item, index) in newFile" @click="show(item, index)" :key="index">
+      <li
+        v-for="(item, index) in newFile"
+        @click="show(item, index)"
+        :key="index"
+      >
         <i class="del" v-if="isDelete">
           <!-- <img src="../../../assets/images/icon/del.png" /> -->
         </i>
@@ -32,62 +36,160 @@ import {FileList} from '@my-plugins/vue-web'
           <el-tooltip placement="bottom-start">
             <div slot="content" v-if="item.fileName">{{ item.fileName }}</div>
             <div style="border: 1px solid #b5bfcf; height: 36px; width: 36px">
-              <img class="pointer" v-if="
-                playType.indexOf(item.myFileType) >= 0 && !item.filePlaying
-              " style="width: 36px; height: 36px" src="../../../assets/images/icon/playing.png" />
-              <img class="pointer" v-else-if="
-                playType.indexOf(item.myFileType) >= 0 && item.filePlaying
-              " style="width: 36px; height: 36px" src="../../../assets/images/icon/myplaying.gif" />
-              <img class="pointer" v-else-if="
-                item.myFileType == 'xlsx' || item.myFileType == 'xls'
-              " style="width: 36px; height: 36px" src="../../../assets/images/icon/excel.png" />
-              <img class="pointer" v-else-if="item.myFileType == 'pdf'" style="width: 36px; height: 36px"
-                src="../../../assets/images/icon/pdf.png" />
-              <img class="pointer" v-else-if="item.myFileType == 'txt'" style="width: 36px; height: 36px"
-                src="../../../assets/images/icon/txt.png" />
-              <img class="pointer" v-else-if="
-                item.myFileType == 'ppt' || item.myFileType == 'pptx'
-              " style="width: 36px; height: 36px" src="../../../assets/images/icon/ppt.png" />
-              <img class="pointer" v-else-if="
-                item.myFileType == 'doc' || item.myFileType == 'docx'
-              " style="width: 36px; height: 36px" src="../../../assets/images/icon/word.png" />
-              <img class="pointer" v-else-if="item.myFileType == 'rar' || item.myFileType == 'zip'"
-                style="width: 36px; height: 36px" src="../../../assets/images/icon/ppt.png" />
+              <img
+                class="pointer"
+                v-if="
+                  playType.indexOf(item.myFileType) >= 0 && !item.filePlaying
+                "
+                style="width: 36px; height: 36px"
+                src="../../../assets/images/icon/playing.png"
+              />
+              <img
+                class="pointer"
+                v-else-if="
+                  playType.indexOf(item.myFileType) >= 0 && item.filePlaying
+                "
+                style="width: 36px; height: 36px"
+                src="../../../assets/images/icon/myplaying.gif"
+              />
+              <img
+                class="pointer"
+                v-else-if="
+                  item.myFileType == 'xlsx' || item.myFileType == 'xls'
+                "
+                style="width: 36px; height: 36px"
+                src="../../../assets/images/icon/excel.png"
+              />
+              <img
+                class="pointer"
+                v-else-if="item.myFileType == 'pdf'"
+                style="width: 36px; height: 36px"
+                src="../../../assets/images/icon/pdf.png"
+              />
+              <img
+                class="pointer"
+                v-else-if="item.myFileType == 'txt'"
+                style="width: 36px; height: 36px"
+                src="../../../assets/images/icon/txt.png"
+              />
+              <img
+                class="pointer"
+                v-else-if="
+                  item.myFileType == 'ppt' || item.myFileType == 'pptx'
+                "
+                style="width: 36px; height: 36px"
+                src="../../../assets/images/icon/ppt.png"
+              />
+              <img
+                class="pointer"
+                v-else-if="
+                  item.myFileType == 'doc' || item.myFileType == 'docx'
+                "
+                style="width: 36px; height: 36px"
+                src="../../../assets/images/icon/word.png"
+              />
+              <img
+                class="pointer"
+                v-else-if="item.myFileType == 'rar' || item.myFileType == 'zip'"
+                style="width: 36px; height: 36px"
+                src="../../../assets/images/icon/ppt.png"
+              />
               <template v-else>
-                <el-image class="pointer" v-if="isViewImg" style="width: 36px; height: 36px" :src="item.myPath"
-                  :preview-src-list="images" />
-                <img v-else class="pointer" isImg="1" style="width: 36px; height: 36px" :src="item.myPath" />
+                <el-image
+                  class="pointer"
+                  v-if="isViewImg"
+                  style="width: 36px; height: 36px"
+                  :src="item.myPath"
+                  :preview-src-list="images"
+                />
+                <img
+                  v-else
+                  class="pointer"
+                  isImg="1"
+                  style="width: 36px; height: 36px"
+                  :src="item.myPath"
+                />
               </template>
             </div>
           </el-tooltip>
         </template>
         <template v-else>
-          <div class="images" style="border: 1px solid #b5bfcf; height: 36px; width: 36px">
-            <img class="pointer" v-if="playType.indexOf(item.myFileType) >= 0 && !item.filePlaying"
-              style="width: 36px; height: 36px" src="../../../assets/images/icon/playing.png" />
-            <img class="pointer" v-else-if="
-              playType.indexOf(item.myFileType) >= 0 && item.filePlaying
-            " style="width: 36px; height: 36px" src="../../../assets/images/icon/myplaying.gif" />
-            <img class="pointer" v-else-if="item.myFileType == 'xlsx' || item.myFileType == 'xls'"
-              style="width: 36px; height: 36px" src="../../../assets/images/icon/excel.png" />
-            <img class="pointer" v-else-if="item.myFileType == 'pdf'" style="width: 36px; height: 36px"
-              src="../../../assets/images/icon/pdf.png" />
-            <img class="pointer" v-else-if="item.myFileType == 'txt'" style="width: 36px; height: 36px"
-              src="../../../assets/images/icon/txt.png" />
-            <img class="pointer" v-else-if="item.myFileType == 'ppt' || item.myFileType == 'pptx'"
-              style="width: 36px; height: 36px" src="../../../assets/images/icon/ppt.png" />
-            <img class="pointer" v-else-if="item.myFileType == 'doc' || item.myFileType == 'docx'"
-              style="width: 36px; height: 36px" src="../../../assets/images/icon/word.png" />
+          <div
+            class="images"
+            style="border: 1px solid #b5bfcf; height: 36px; width: 36px"
+          >
+            <img
+              class="pointer"
+              v-if="playType.indexOf(item.myFileType) >= 0 && !item.filePlaying"
+              style="width: 36px; height: 36px"
+              src="../../../assets/images/icon/playing.png"
+            />
+            <img
+              class="pointer"
+              v-else-if="
+                playType.indexOf(item.myFileType) >= 0 && item.filePlaying
+              "
+              style="width: 36px; height: 36px"
+              src="../../../assets/images/icon/myplaying.gif"
+            />
+            <img
+              class="pointer"
+              v-else-if="item.myFileType == 'xlsx' || item.myFileType == 'xls'"
+              style="width: 36px; height: 36px"
+              src="../../../assets/images/icon/excel.png"
+            />
+            <img
+              class="pointer"
+              v-else-if="item.myFileType == 'pdf'"
+              style="width: 36px; height: 36px"
+              src="../../../assets/images/icon/pdf.png"
+            />
+            <img
+              class="pointer"
+              v-else-if="item.myFileType == 'txt'"
+              style="width: 36px; height: 36px"
+              src="../../../assets/images/icon/txt.png"
+            />
+            <img
+              class="pointer"
+              v-else-if="item.myFileType == 'ppt' || item.myFileType == 'pptx'"
+              style="width: 36px; height: 36px"
+              src="../../../assets/images/icon/ppt.png"
+            />
+            <img
+              class="pointer"
+              v-else-if="item.myFileType == 'doc' || item.myFileType == 'docx'"
+              style="width: 36px; height: 36px"
+              src="../../../assets/images/icon/word.png"
+            />
             <template v-else>
-              <el-image class="pointer" v-if="isViewImg" style="width: 36px; height: 36px" :src="item.myPath"
-                :preview-src-list="images" />
-              <img v-else class="pointer" isImg="1" style="width: 36px; height: 36px" :src="item.myPath" />
+              <el-image
+                class="pointer"
+                v-if="isViewImg"
+                style="width: 36px; height: 36px"
+                :src="item.myPath"
+                :preview-src-list="images"
+              />
+              <img
+                v-else
+                class="pointer"
+                isImg="1"
+                style="width: 36px; height: 36px"
+                :src="item.myPath"
+              />
             </template>
           </div>
         </template>
-        <el-tooltip placement="bottom-start" v-if="item.fileName && showFileName">
+        <el-tooltip
+          placement="bottom-start"
+          v-if="item.fileName && showFileName"
+        >
           <div slot="content">{{ item.fileName }}</div>
-          <p class="textover ft-size12 fc-6" style="width: 36px" :title="item.fileName">
+          <p
+            class="textover ft-size12 fc-6"
+            style="width: 36px"
+            :title="item.fileName"
+          >
             {{ item.fileName }}
           </p>
         </el-tooltip>
@@ -100,7 +202,7 @@ import {FileList} from '@my-plugins/vue-web'
 import { useOssStore } from "@/stores/oss";
 export default {
   name: "FileList",
-  setup() { },
+  setup() {},
   components: {},
   data() {
     return {
@@ -177,8 +279,8 @@ export default {
     },
     isViewImg: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
     show(arg, index) {
@@ -225,32 +327,32 @@ export default {
       if (!this.file) {
         return [];
       }
+      let fileList = JSON.parse(JSON.stringify(this.file));
       return this.file.length > 0
-        ? this.file.filter((item) => {
-          item.fileName ? item.fileName : (item.fileName = item.filename);
-          item.fileSize ? item.fileSize : (item.fileSize = item.filesize);
-          item.fileSuffix
-            ? item.fileSuffix
-            : (item.fileSuffix = item.filetype);
-          item.filePath
-            ? item.filePath
-            : (item.filePath = item.fileurl || item.fileUrl);
-          item.fileType
-            ? item.fileType
-            : (item.fileType = item.filetype || item.fileType);
-          if (item.filePath && item.filePath.indexOf("https://") == "-1") {
-            item.myPath =
-              this.upUrl + "/" + item.filePath;
-          } else {
-            item.myPath = item.filePath;
-          }
-          item.myPath +=
-            "?x-oss-process=image/resize,m_pad,h_50,w_50,color_ffffff";
-          item.myFileType = item.filePath
-            ? item.filePath.replace(/.+\./, "")
-            : item.filePath;
-          return true;
-        })
+        ? fileList.filter((item) => {
+            item.fileName ? item.fileName : (item.fileName = item.filename);
+            item.fileSize ? item.fileSize : (item.fileSize = item.filesize);
+            item.fileSuffix
+              ? item.fileSuffix
+              : (item.fileSuffix = item.filetype);
+            item.filePath
+              ? item.filePath
+              : (item.filePath = item.fileurl || item.fileUrl);
+            item.fileType
+              ? item.fileType
+              : (item.fileType = item.filetype || item.fileType);
+            if (item.filePath && item.filePath.indexOf("https://") == "-1") {
+              item.myPath = this.upUrl + "/" + item.filePath;
+            } else {
+              item.myPath = item.filePath;
+            }
+            item.myPath +=
+              "?x-oss-process=image/resize,m_pad,h_50,w_50,color_ffffff";
+            item.myFileType = item.filePath
+              ? item.filePath.replace(/.+\./, "")
+              : item.filePath;
+            return true;
+          })
         : [];
     },
   },
@@ -326,7 +428,6 @@ export default {
       }
       return "";
     },
-
   },
 };
 </script>
