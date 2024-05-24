@@ -21,6 +21,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@my-plugins/vue-web": "1.0.9",
     "@vueup/vue-quill": "^1.2.0",
     "ali-oss": "^6.20.0",
     "axios": "^1.6.8",
