@@ -1,6 +1,6 @@
 variables:
   npmAddress: "121.36.160.77:4873"
-  token: $TOKEN || "MDAxYzg3ZjliZTU4MTRhZTc0ZmRhOTdiZTIwN2FjNjM6OTVlYTIxYWY2OWExOGE2NzdjZTBjZTRh"
+  loginToken: $TOKEN || "MDAxYzg3ZjliZTU4MTRhZTc0ZmRhOTdiZTIwN2FjNjM6OTVlYTIxYWY2OWExOGE2NzdjZTBjZTRh"
 
 .job_template: &job_definition
   before_script:
@@ -26,7 +26,7 @@ build:
     - npm install -g pnpm
     - export NODE_OPTIONS=--openssl-legacy-provider
     - pnpm config set registry "http://${npmAddress}/"
-    - pnpm config set -- '//${npmAddress}/:_authToken' "${token}"
+    - pnpm config set -- '//${npmAddress}/:_authToken' "${loginToken}"
     - pnpm whoami
     - pnpm install && pnpm run build
     - echo 'build done'
