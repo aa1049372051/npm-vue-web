@@ -1,6 +1,6 @@
 variables:
   npmAddress: "121.36.160.77:4873"
-  token: "MDAxYzg3ZjliZTU4MTRhZTc0ZmRhOTdiZTIwN2FjNjM6OTVlYTIxYWY2OWExOGE2NzdjZTBjZTRh"
+  token: $TOKEN || "MDAxYzg3ZjliZTU4MTRhZTc0ZmRhOTdiZTIwN2FjNjM6OTVlYTIxYWY2OWExOGE2NzdjZTBjZTRh"
 
 .job_template: &job_definition
   before_script:
@@ -30,7 +30,8 @@ build:
     - pnpm whoami
     - pnpm install && pnpm run build
     - echo 'build done'
-    - pnpm publish    
+    - pnpm config get
+    - pnpm publish --no-git-checks
     - echo "publish done"
 
   when: manual
