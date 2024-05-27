@@ -30,7 +30,7 @@ build:
     - pnpm whoami
     - pnpm install && pnpm run build
     - echo 'build done'
-    # - pnpm publish    
+    - pnpm publish    
     - echo "publish done"
 
   when: manual
