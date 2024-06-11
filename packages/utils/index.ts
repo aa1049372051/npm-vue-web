@@ -5,3 +5,4 @@ export { default as httpV3 } from "./httpV3.js";
 export * from "./main";
 export { default as Toast } from "./toast";
 export { default as httpYyt } from "./httpYyt.js";
+export { default as tableKeyboard } from "./tableKeyboard.js";

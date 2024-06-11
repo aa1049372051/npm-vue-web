@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 const myfile = ref();
 import HelloWorld from "./components/HelloWorld.vue";
 // import { WGridView } from "@my-plugins/vue-web";
@@ -14,7 +14,7 @@ import HelloWorld from "./components/HelloWorld.vue";
 // } from "@my-plugins/vue-web";
 // import "@my-plugins/vue-web/lib/style.css";
 // 引用vue-web样式
-import "../lib/style.css";
+// import "../lib/style.css";
 import {
   WGridView,
   WOssUpload,
@@ -25,6 +25,15 @@ import {
   Editor,
 } from "../packages/index";
 console.log(plugins, utils);
+onMounted(() => {
+  setTimeout(() => {
+    const focusController = new utils.tableKeyboard("myTableId", {
+      pageKeyboardShortcuts(event) {
+        console.log(event);
+      },
+    });
+  }, 2000);
+});
 const javaApi = () => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -47,7 +56,16 @@ let columns = [
     prop: "age",
   },
 ];
-
+let tableData = ref([
+  {
+    label: "名称",
+    prop: "name",
+  },
+  {
+    label: "年龄",
+    prop: "age",
+  },
+]);
 const content = ref("");
 watch(content, (value) => {
   console.log(value);
@@ -66,34 +84,62 @@ watch(content, (value) => {
       <Editor style="height:200px" v-model="content"></Editor>
     </el-row> -->
     <!-- <WArea></WArea> -->
-    <WOssUpload
-      importType="Web"
-      ref="myfile"
-      :my-file="{
-        importType: '.png,.jpg',
-        listType: 'text',
-        fileCount: 9,
-        ID: 0,
-        fileList: [
-          { filePath: 'business/46551_1715658317_7164.png', fileType: 1 },
-        ],
-      }"
-      :show-tips="false"
-      :is-open-screenshot="false"
-      :show-file-name="false"
+    <el-table
+      :cell-class-name="
+        (data) => {
+          return utils.tableKeyboard.cellClassName(data, {
+            notCanMove: ['name2', 'name6'],
+          });
+        }
+      "
+      border
+      id="myTableId"
+      :data="tableData"
+      style="width: 100%"
     >
-      <el-button link type="primary">上传</el-button>
-    </WOssUpload>
-    <el-button @click="console.log(myfile.fileList)">获取图片列表</el-button>
-    <WGridView
-      :closePage="false"
-      :javaApi="javaApi"
-      :columns="columns"
-    ></WGridView>
-    <FileList
-      :file="[{ filePath: 'business/46551_1715658317_7164.png', fileType: 1 }]"
-      :isViewImg="true"
-    ></FileList>
+      <el-table-column label="name1" width="180">
+        <template #default="scope">
+          <el-input
+            v-model="scope.row.name"
+            style="width: 140px"
+            placeholder="Please input"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column label="name2" width="180"> </el-table-column>
+      <el-table-column label="name3" width="180">
+        <template #default="scope">
+          <el-input
+            v-model="scope.row.name2"
+            style="width: 140px"
+            placeholder="Please input"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column label="name4" width="180">
+        <template #default="scope">
+          <el-input
+            v-model="scope.row.name3"
+            style="width: 140px"
+            placeholder="Please input"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column label="name6">
+        <template #default="scope">
+          <el-button
+            size="small"
+            @click="
+              () => {
+                tableData.push({});
+              }
+            "
+          >
+            Edit
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
   <HelloWorld msg="Vite + Vue" />
 </template>
